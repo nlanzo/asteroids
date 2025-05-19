@@ -31,27 +31,30 @@ def main():
 
     Shot.containers = (shots, updatable, drawable)
 
-    Scoreboard.containers = (drawable)
+    Scoreboard.containers = (updatable, drawable)
     scoreboard = Scoreboard()
-
+    scoreboard.score = 0
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                pygame.quit()
                 return
             
+        dt = clock.tick(60) / 1000
         updatable.update(dt)
 
         for asteroid in asteroids:
             if asteroid.collides_with(player):
                 print("Game over!")
                 print(f"Score: {scoreboard.score}")
+                pygame.quit()
                 sys.exit()
 
         for asteroid in asteroids:
             for shot in shots:
                 if asteroid.collides_with(shot):
-                    scoreboard.add_score(1)
+                    scoreboard.score += 1
                     shot.kill()
                     asteroid.split()
 
@@ -61,8 +64,6 @@ def main():
             item.draw(screen=screen)
 
         pygame.display.flip()
-        
-        dt = clock.tick(60) / 1000
 
 if __name__ == "__main__":
   main()
